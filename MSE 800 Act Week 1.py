@@ -10,8 +10,9 @@ Certifications = {"Azure", "AWS"}
 
 #Assigning hours worked
 hours = 25
-#Assingning Payrate
+#Assigning Payrate
 payrate = 31.2
 grosspay = hours * payrate
 #Priting the grosspay
+
 print (grosspay)
