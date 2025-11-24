@@ -34,7 +34,7 @@ else
 """
     
 
-#activity 3 Fibonacci
+#activity 3 Fibonacci and Factorial
 
 def main():
 
