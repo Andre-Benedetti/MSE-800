@@ -22,7 +22,7 @@ def main():
     N = int(input("Enter N: ")) #input from the user
 
     if N <= 0:
-        print("Please enter a positive integer.")
+        print("Please enter a positive integer.") #error message for non-positive integers
     else:
         print (f"The {N}th element of the Fibonacci series is: {fibonacci_recursive(N)}")
         print (f"The factorial of {N} is: {factorial_recursive(N)}")
