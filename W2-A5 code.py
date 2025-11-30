@@ -40,11 +40,11 @@ class Temp_converter:
 
         if temp == 'F':
             C = (num - 32) * 5.0 / 9.0
-            print(f" {self.full_input} degrees Fereinheint converted to Celsius is: {C:.2f} C")
+            print(f"{self.full_input} degrees Fereinheint converted to Celsius is: {C:.2f} C")
         
         elif temp == 'C':
             F = (num * 9.0 / 5.0) + 32
-            print(f"🔥 {self.full_input} degrees Celsius converted to Fereinheint is: {F:.2f} F")
+            print(f"{self.full_input} degrees Celsius converted to Fereinheint is: {F:.2f} F")
         
 def main():
     
