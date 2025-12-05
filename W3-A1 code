@@ -1,11 +1,11 @@
 class DataProcessor:
-    def __init__(self, data):
+    def __init__(self, data): # Constructor to initialize data
         self.data = data
 
-    def read_text(self):
+    def read_text(self): # Method to read text from a file
 
-        file_path = r"demo_file.txt"
-        with open(file_path, 'r') as file:
+        file_path = "demo_file.txt"
+        with open(file_path, 'r', encoding='utf-8') as file:
             content = file.read()
         return content
     
@@ -20,7 +20,6 @@ def main():
 
     processor = DataProcessor(data=None)
     processor.data = processor.read_text()
-    print(f"Data read from file:\n{processor.data}\n")
     processor.count()
 
 if __name__ == "__main__":
