@@ -17,6 +17,7 @@ class DataProcessor:
         star_count = self.data.count('*')
         print(f"Number of '*' characters in the data: {star_count}")
     
+    
 def main():
 
     processor = DataProcessor(data=None)
