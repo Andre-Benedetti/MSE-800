@@ -26,29 +26,19 @@ class Patient: #Represents a patient in the clinic.
             "Address": self.address
         }
 
-class Specialty:#medical specialty with a unique code
+class Specialty: #medical specialty with a unique code
     
     def __init__(self, code: str, name: str):
         self.code = code
         self.name = name
 
-class Doctor:#Doctor who can be linked to multiple specialties
+class Doctor: #Doctor can be linked to multiple specialties
     
     def __init__(self, doctor_id: int, name: str, phone: str):
         self.doctor_id = doctor_id
         self.name = name
         self.phone = phone
         # Note: Specialty linkages are handled by the database class
-
-class Appointment: #Represents a scheduled appointment
-    
-    def __init__(self, appointment_id: int, patient_id: int, doctor_id: int, date: str, time: str, reason: str):
-        self.appointment_id = appointment_id
-        self.patient_id = patient_id
-        self.doctor_id = doctor_id
-        self.date = date
-        self.time = time
-        self.reason = reason
 
 class ClinicDatabase:#Manages database connections and CRUD operations.
     
@@ -105,19 +95,6 @@ class ClinicDatabase:#Manages database connections and CRUD operations.
             )
         """)
 
-        # Appointments Table
-        self.cursor.execute("""
-            CREATE TABLE IF NOT EXISTS Appointments (
-                appointment_id INTEGER PRIMARY KEY,
-                patient_id INTEGER,
-                doctor_id INTEGER,
-                date TEXT NOT NULL,
-                time TEXT,
-                reason TEXT,
-                FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
-                FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id)
-            )
-        """)
         self.conn.commit()
     
     #CRUD methods for inserting data into tables
@@ -142,7 +119,6 @@ class ClinicDatabase:#Manages database connections and CRUD operations.
         self.conn.commit()
 
     def get_all_patients(self) -> List[Patient]: #Counts the total number of patients 
-        """Retrieves all patients from the database as Patient objects."""
         self.cursor.execute("SELECT patient_id, name, dob, phone, address FROM Patients")
         patient_data = self.cursor.fetchall()
         
@@ -179,7 +155,7 @@ def _calculate_age(dob_str: str) -> int: # Function for age calculation based on
     except:
         return 0 
     
-class Clinic: #High-level clinic operations interfacing with
+class Clinic: #High-level clinic operations interfacing
     
     def __init__(self):
         self.db = ClinicDatabase()
@@ -236,7 +212,7 @@ def setup_initial_data(clinic: Clinic): #Sets up initial data for testing and de
     clinic.db.insert_doctor(Doctor(4, "Dr. Ricardo Nunes", "555-4444"))
     clinic.db.insert_doctor(dr_laura)
 
-    # Assign Specialties (M:N Link)
+    # Assign Specialties
     clinic.db.assign_doctor_specialty(1, "OPT") 
     clinic.db.assign_doctor_specialty(2, "CAR")
     clinic.db.assign_doctor_specialty(3, "OPT")
@@ -244,7 +220,7 @@ def setup_initial_data(clinic: Clinic): #Sets up initial data for testing and de
     clinic.db.assign_doctor_specialty(4, "GEN")
     clinic.db.assign_doctor_specialty(5, "OPT") # Total OPT doctors: 1, 3, 5 (Count: 3)
 
-    # Patients Data (for Requirement 1)
+    # Patients Data
     clinic.db.insert_patient(Patient(101, "Joana Silva", "1955-08-15", "555-1234", "10, Street A")) # Senior (~70)
     clinic.db.insert_patient(Patient(102, "Carlos Mendes", "1990-03-20", "555-5678", "25, Avenue B")) # Not Senior (~35)
     clinic.db.insert_patient(Patient(103, "Helena Souza", "1945-11-01", "555-9012", "30, Road C")) # Senior (~80)
@@ -259,7 +235,6 @@ def main():
     clinic_system.list_senior_patients() # List senior patients
     clinic_system.display_ophthalmology_doctor_count("OPT")   # Display ophthalmology doctor count
     clinic_system.close() # Close connection
-    print("\nDatabase connection closed.")
-
+   
 if __name__ == "__main__":
     main()
