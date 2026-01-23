@@ -18,13 +18,11 @@ class StudentDB: #create a class to handle database operations
 
     def populate_data(self):# Initial data
         
-        students_data = [
-            ('1', 'Joao', 35),
-            ('2', 'Maria', 90),
-            ('3', 'Pedro', 48),
-            ('4', 'Ana', 92),
-            ('5', 'Luis', 88)
-        ]
+        names = {'1': 'Joao', '2': 'Maria', '3': 'Pedro', '4': 'Ana', '5': 'Luis'}
+        scores = {'1': 35, '2': 90, '3': 48, '4': 92, '5': 88}
+        students_data = [(student_id, name, scores.get(student_id, 0)) for student_id, name in names.items()]
+        #scores.get(student_id, 0) ensures a default score of 0 if not found
+        
         # Insert or update records
         self.cursor.executemany('''
             INSERT OR REPLACE INTO students (student_id, name, score)
