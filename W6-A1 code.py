@@ -1,4 +1,3 @@
-
 class Student: #class to identify the students
     def __init__(self, student_id, name):
         self.student_id = student_id
