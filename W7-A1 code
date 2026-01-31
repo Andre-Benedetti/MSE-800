@@ -1,0 +1,33 @@
+#1 - No erros
+#2 - Factory pattern was used by class NotificationFactory as it encapsulates the object creation logic. 
+#2 - The main file does import the necessary classes from notification.
+#3 - The code below does not uses Factory:
+
+from notification import EmailNotification, SMSNotification, PushNotification
+
+
+class Notification ():
+    def __init__(self, notification_type: str):
+        self.type = notification_type
+       
+        # If-Else approach without using Factory Pattern
+        if notification_type == "email":
+            notification = EmailNotification()
+            print(f"📧 Email sent")
+        elif notification_type == "sms":
+            notification = SMSNotification()
+            print(f"📱 SMS sent")
+        elif notification_type == "push":
+            notification = PushNotification()
+            print(f"🔔 Push notification sent")
+        else:
+            print("Invalid notification type")
+            return
+
+
+def main():
+    notification_type = input("Enter notification type (email/sms/push): ").lower()
+    Notification(notification_type)
+   
+if __name__ == "__main__":
+    main()
