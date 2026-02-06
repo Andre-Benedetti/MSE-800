@@ -1,3 +1,6 @@
+#The Namerfactory class decides which Namer class to use, whitout the 
+#client having to know about the details of the Namer classes.
+
 #base Namer class
 class Namer():
     def __init__(self):

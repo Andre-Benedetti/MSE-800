@@ -1,3 +1,4 @@
+
 from abc import ABC, abstractmethod
 
 class Unit(ABC):
@@ -26,7 +27,3 @@ class Maker:
         else:
             raise ValueError("Unknown type")
         
-
-#The design pattern used here is the Factory Pattern, as the objected creation responsability is on the Maker class. One advantage is that the Maker class doesn't need to knnow 
-#the details of the objects it creates, and can easily be extended to create new types of units without modifying existing code.
-#A disadvantage is that it can also make it to understand the code if there are too many classes.  

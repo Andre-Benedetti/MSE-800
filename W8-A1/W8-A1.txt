@@ -1,0 +1,20 @@
+Considering the NamerConsole.py file, the Namerfactory decides which Namer class to use, without the client having to know about the details of the Namer Class.:
+class NamerFactory():
+    def __init__(self, namestring):
+        self.name = namestring
+    def getNamer(self):
+        i = self.name.find(",") # if it finds a comma
+        if i>0:
+            return LastFirst(self.name) # get the LastFirst class
+        else:
+            return FirstFirst(self.name) # else get the FirstFirst
+
+If NamerFactory find that the same has a comma as separation, it calls the LastFirst class, without needing to know what the class does. If it does not find a comma it calls the FirstFirst class.
+
+The output is:
+Enter name: Benedetti, Andre
+ Andre Benedetti
+
+Enter name: Andre Benedetti
+Andre Benedetti
+
