@@ -1,0 +1,18 @@
+W7-A3 – Design Patter
+
+Botfactory.py file uses the Factory Pattern, as the objected creation responsibility is on the Maker class. 
+One advantage is that the Maker class doesn't need to know the details of the objects it creates and can easily be extended to create new types of units without modifying existing code.
+A disadvantage is that it can also make it hard to understand the code if there are too many classes. 
+
+Core.py file uses the Singleton Pattern, as the Keeper class ensures that only one instance of itself can exist. 
+The advantage is that it provides a single point of access to the instance, helping to manage shared resources.
+The disadvantage is that it can make unit testing difficult, as the singleton instance may retain state between tests.
+
+Tracker.py uses the Observer Pattern, as the Watcher class defines a common interface for objects that want to be notified of changes in the state of another object. 
+The advantage is that it allows for a loose coupling between the subject and its observers, making it easy to add or remove observers without modifying the subject. 
+The disadvantage is that it can lead to performance issues as all observers will be notified of every change.
+
+
+
+
+
