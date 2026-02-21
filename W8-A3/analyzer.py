@@ -1,48 +1,48 @@
 """
 CV Analyzer Module for Yoobee MSE-800.
-Uses Gemini 2.0 to provide NZ-focused career advice.
+Uses Groq (Llama 3.3) for lightning-fast NZ-focused career advice.
 """
 
 import os
-from google.genai import Client
+from groq import Groq
 from docx import Document
 
 # pylint: disable=too-few-public-methods
-class GeminiClient:
-    """Handles communication with the Google Gemini API using the modern SDK."""
+class GroqCVClient:
+    """Handles communication with Groq API."""
     def __init__(self, api_key):
-        self.api_key = api_key
-        if self.api_key:
-            # In the new SDK, we initialize the Client directly with the API key
-            self.client = Client(api_key=self.api_key)
-        else:
-            self.client = None
+        self.client = Groq(api_key=api_key) if api_key else None
 
     def get_suggestions(self, cv_text):
-        """Sends CV text to Gemini and returns professional NZ-focused advice."""
+        """Sends CV text to Groq and returns professional NZ-focused advice."""
         if not self.client:
-            return "Error: Gemini API Key not configured correctly."
+            return "Error: Groq API Key not configured."
 
-        # Structured prompt for the AI
         prompt = f"""
         You are a career expert in the New Zealand tech industry.
         Analyze the following CV and provide 3 actionable recommendations to improve its quality
-        for a Software Engineering role, specifically highlighting the transition from
-        administrative/operations roles to tech. Mention that the candidate is currently
-        studying a Master in Software Engineering at Yoobee.
+        for a Software Engineering role. Focus on:
+        1. The transition from administrative roles to tech.
+        2. Mentioning the Master in Software Engineering at Yoobee.
+        3. NZ-specific CV standards.
 
         CV Content:
         {cv_text}
         """
 
         try:
-            response = self.client.models.generate_content(
-                model='gemini-2.0-flash',
-                contents=prompt
+            completion = self.client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "system", "content": "You are a professional NZ Career Coach."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.5,
+                max_tokens=1024
             )
-            return response.text
+            return completion.choices[0].message.content
         except Exception as e: # pylint: disable=broad-exception-caught
-            return f"API Error: {str(e)}"
+            return f"Groq API Error: {str(e)}"
 
 class CVAnalyzer:
     """Handles CV file parsing and analysis orchestration."""
@@ -50,23 +50,31 @@ class CVAnalyzer:
         self.client = client
 
     def process_cv(self, file_path):
-        """Extracts text from .txt or .docx and sends it to the Gemini client."""
+        """Extracts text from .txt or .docx and sends it to the Groq client."""
         if not os.path.exists(file_path):
             return f"Error: File not found at {file_path}"
-
         try:
-            # Handle Word Documents
             if file_path.endswith('.docx'):
                 doc = Document(file_path)
                 content = "\n".join([para.text for para in doc.paragraphs])
-            # Handle Plain Text files
             else:
                 with open(file_path, 'r', encoding='utf-8') as f:
                     content = f.read()
-
-            # Send extracted content to the AI client
             return self.client.get_suggestions(content)
         except Exception as e: # pylint: disable=broad-exception-caught
             return f"Processing error: {str(e)}"
-    
-    
+
+if __name__ == "__main__":
+    # Note: For production, use environment variables for the API key
+    API_KEY = "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"
+
+    groq_client = GroqCVClient(API_KEY)
+    analyzer = CVAnalyzer(groq_client)
+
+    print("\n--- Yoobee CV Analyzer (Powered by Groq) ---")
+    path_to_cv = input("Path to .docx: ").strip().replace('"', '').replace("'", "")
+
+    if path_to_cv:
+        print("\nAnalyzing with Llama 3.3... hang tight!")
+        result = analyzer.process_cv(path_to_cv)
+        print("\n" + "="*50 + "\n" + result + "\n" + "="*50)
