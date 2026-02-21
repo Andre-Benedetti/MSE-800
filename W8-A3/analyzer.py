@@ -65,7 +65,7 @@ class CVAnalyzer:
             return f"Processing error: {str(e)}"
 
 if __name__ == "__main__":
-    # Note: For production, use environment variables for the API key
+    
     API_KEY = "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"
 
     groq_client = GroqCVClient(API_KEY)
