@@ -1,7 +1,13 @@
+"""
+CV Analyzer Module for Yoobee MSE-800.
+Uses Gemini 2.0 to provide NZ-focused career advice.
+"""
+
 import os
 from google.genai import Client
 from docx import Document
 
+# pylint: disable=too-few-public-methods
 class GeminiClient:
     """Handles communication with the Google Gemini API using the modern SDK."""
     def __init__(self, api_key):
@@ -11,7 +17,7 @@ class GeminiClient:
             self.client = Client(api_key=self.api_key)
         else:
             self.client = None
-        
+
     def get_suggestions(self, cv_text):
         """Sends CV text to Gemini and returns professional NZ-focused advice."""
         if not self.client:
@@ -19,12 +25,12 @@ class GeminiClient:
 
         # Structured prompt for the AI
         prompt = f"""
-        You are a career expert in the New Zealand tech industry. 
-        Analyze the following CV and provide 3 actionable recommendations to improve its quality 
-        for a Software Engineering role, specifically highlighting the transition from 
-        administrative/operations roles to tech. Mention that the candidate is currently 
+        You are a career expert in the New Zealand tech industry.
+        Analyze the following CV and provide 3 actionable recommendations to improve its quality
+        for a Software Engineering role, specifically highlighting the transition from
+        administrative/operations roles to tech. Mention that the candidate is currently
         studying a Master in Software Engineering at Yoobee.
-        
+
         CV Content:
         {cv_text}
         """
@@ -35,7 +41,7 @@ class GeminiClient:
                 contents=prompt
             )
             return response.text
-        except Exception as e:
+        except Exception as e: # pylint: disable=broad-exception-caught
             return f"API Error: {str(e)}"
 
 class CVAnalyzer:
@@ -47,7 +53,7 @@ class CVAnalyzer:
         """Extracts text from .txt or .docx and sends it to the Gemini client."""
         if not os.path.exists(file_path):
             return f"Error: File not found at {file_path}"
-        
+
         try:
             # Handle Word Documents
             if file_path.endswith('.docx'):
@@ -57,8 +63,10 @@ class CVAnalyzer:
             else:
                 with open(file_path, 'r', encoding='utf-8') as f:
                     content = f.read()
-            
+
             # Send extracted content to the AI client
             return self.client.get_suggestions(content)
-        except Exception as e:
+        except Exception as e: # pylint: disable=broad-exception-caught
             return f"Processing error: {str(e)}"
+    
+    
