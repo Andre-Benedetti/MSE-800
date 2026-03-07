@@ -10,5 +10,9 @@ def hello_world():
 def bye():
     return "<p>Bye Flask Framework!</p>"
 
+@app.route("/username/<name>")
+def learner(name):
+    return f"{name} is learning FLASK!</p>"
+
 if __name__ == "__main__":
     app.run(debug=True)
