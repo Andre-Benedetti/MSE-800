@@ -1,10 +1,20 @@
-from flask import Flask
+from flask import Flask, url_for
 
 app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    return "<p>Hello Flask Framework!</p>"
+    logo_url = url_for('static', filename='flask-logo.svg')
+    
+    return f"""
+    <h1>Welcome to my Flask App!</h1>
+    <p>Hello Flask Framework!</p>
+    
+    <p>Check out the <a href="https://flask.palletsprojects.com/en/stable/quickstart/">Flask Quickstart Guide</a>.</p>
+    
+    <p>Here is the local Flask logo:</p>
+    <img src="{logo_url}" alt="Flask Logo" width="200">
+    """
 
 @app.route("/bye")
 def bye():
