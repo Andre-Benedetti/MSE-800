@@ -12,7 +12,11 @@ def bye():
 
 @app.route("/username/<name>")
 def learner(name):
-    return f"{name} is learning FLASK!</p>"
+    return f"{name} is learning FLASK!"
+
+@app.route("/username/<name>/<int:number>")
+def learner2(name, number):
+    return f"{name} is learning FLASK!{name} wakes up at {number} a.m. every day</p>"
 
 if __name__ == "__main__":
     app.run(debug=True)
