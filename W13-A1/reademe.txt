@@ -1,0 +1,23 @@
+How the System Generates Diet Plans
+
+The Personalized Diet Suggestion system follows a multi-step logic flow to ensure that the AI provides relevant and context-aware nutritional guidelines:
+
+1. Data Collection & Normalization
+The system captures four key metrics from the user: Weight (kg), Height (m), Age, and Sex. Before processing, the backend validates these inputs to ensure they are numeric and biologically plausible.
+
+2. Physical Assessment (BMI Calculation)The system calculates the Body Mass Index (BMI) using the standard formula: BMI = weight/height^2. Based on the result, the system assigns a clinical category (e.g., Underweight, Normal Weight, Overweight, or Obesity) to provide the AI with immediate clinical context.
+
+3. Contextual Prompt Engineering
+Instead of a generic request, the system constructs a structured "Prompt" for the LLM. It combines the 3 specific factors (BMI, Age, Sex) into a clinical persona:
+
+	The Persona: It instructs the AI to "Act as a professional 	nutritionist.
+
+	"The Profile: It provides the patient's specific age, sex, and BMI 	category.
+
+	The Goal: It requests specific macronutrient focus and food 	examples.
+
+4. LLM Inference via GroqCloudThe structured prompt is sent to the Llama 3 model (via GroqCloud). 
+The AI analyzes the relationship between the factors—for example, recognizing that a "Normal Weight" 70-year-old female has different metabolic needs than an "Obesity" category 25-year-old male—and generates a customized text response.
+
+5. Final Rendering
+The response is returned to the Django view and rendered in the browser using the linebreaks filter to maintain the AI's formatting (bullets and paragraphs), providing an easy-to-read plan for the user.
