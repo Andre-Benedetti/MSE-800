@@ -35,11 +35,16 @@ def get_llm_diet_suggestion(bmi_info, age, gender):
 
     # Construct the prompt
     prompt = (
-        f"Act as a professional nutritionist. Provide a personalized diet suggestion for a patient with the following profile:\n"
-        f"- Age: {age} years old\n"
-        f"- Sex: {gender}\n"
-        f"- BMI: {bmi_info['value']} ({bmi_info['category']})\n\n"
-        f"Please include specific macronutrient focus and examples of recommended foods. Keep it concise."
+        f"INSTRUCTION: Act as a professional nutritionist and provide a personalized diet suggestion "
+        f"including macronutrient focus and food examples for the profile below.\n"
+        f"USER PROFILE: Age {age}, Sex {gender}, BMI {bmi_info['value']} ({bmi_info['category']}).\n\n"
+        f"TASK:\n"
+        f"1. Rephrase the INSTRUCTION above to show you understand your professional role and requirements.\n"
+        f"2. Respond to that rephrased instruction with the actual diet plan.\n\n"
+        f"FORMAT:\n"
+        f"REPHRASED INSTRUCTION: [Your rephrasing]\n"
+        f"NUTRITIONAL PLAN: [Your suggestion]\n"
+        f"DONE"
     )
 
     try:
@@ -51,6 +56,10 @@ def get_llm_diet_suggestion(bmi_info, age, gender):
                 }
             ],
             model="llama-3.3-70b-versatile", 
+           temperature=0.4,      # Focused and professional
+            top_p=0.24,           # Narrowed probability mass
+            stop=["DONE"],        # Stop sequence
+            max_tokens=1024         #Limit response length to ensure conciseness
         )
         return chat_completion.choices[0].message.content
     except Exception as e:

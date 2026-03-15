@@ -21,8 +21,16 @@ def bmi_page(request):
         result = calculate_bmi_info(weight, height)
 
         if result:
-            # 2. Call the real GroqCloud LLM 
-            diet_suggestion = get_llm_diet_suggestion(result, age, gender)
+            # 2. Get the full raw response from Groq
+            raw_response = get_llm_diet_suggestion(result, age, gender)
+            
+            # 3. Slicing logic to hide the REPHRASED INSTRUCTION
+            if "NUTRITIONAL PLAN:" in raw_response:
+                # Split the text at the marker and take everything after it
+                diet_suggestion = raw_response.split("NUTRITIONAL PLAN:")[1].strip()
+            else:
+                # Fallback in case the LLM deviates from the format
+                diet_suggestion = raw_response
 
     return render(request, 'bmi.html', {
         'result': result, 

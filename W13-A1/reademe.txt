@@ -10,14 +10,27 @@ The system captures four key metrics from the user: Weight (kg), Height (m), Age
 3. Contextual Prompt Engineering
 Instead of a generic request, the system constructs a structured "Prompt" for the LLM. It combines the 3 specific factors (BMI, Age, Sex) into a clinical persona:
 
-	The Persona: It instructs the AI to "Act as a professional 	nutritionist.
+	- The Persona: It instructs the AI to "Act as a professional 	nutritionist.
 
-	"The Profile: It provides the patient's specific age, sex, and BMI 	category.
+	- The Profile: It provides the patient's specific age, sex, and BMI 	category.
 
-	The Goal: It requests specific macronutrient focus and food 	examples.
+	- The Rephrasing Task: Before generating the plan, the AI is instructed to rephrase the original request. This internal "Chain-of-Thought" ensures the model has correctly parsed 	its professional role and the specific constraints of the user's profile, significantly reducing logical errors.
 
-4. LLM Inference via GroqCloudThe structured prompt is sent to the Llama 3 model (via GroqCloud). 
-The AI analyzes the relationship between the factors—for example, recognizing that a "Normal Weight" 70-year-old female has different metabolic needs than an "Obesity" category 25-year-old male—and generates a customized text response.
+4. LLM Inference via GroqCloud
+The structured prompt is sent to the Llama 3 model (via GroqCloud). 
+The structured prompt is transmitted to the Llama 3 model via the GroqCloud API. To ensure the diet plans are medically consistent and factually reliable, the inference process is governed by specific sampling parameters:
+
+	- Deterministic Sampling (Temperature = 0.4): By lowering the temperature, the system reduces "creativity" in favor of consistency. This ensures that users with similar profiles 	receive stable, professional-grade nutritional advice rather than randomized suggestions.
+
+	- Nucleus Sampling (Top P = 0.24): The model only considers the top 24% of the probability mass for word selection. This aggressive filtering eliminates "hallucinations" and 	ensures the AI chooses the most scientifically appropriate terminology.
+
+	- Vocabulary Constraint (Top K): not supported by this model 
+
+	- Contextual Logic: The AI analyzes the interplay between factors—recognizing, for instance, that a "Normal Weight" 70-year-old female requires a different caloric density and 	micronutrient focus (e.g., bone health) compared to an "Obesity" category 25-year-old male (e.g., metabolic rate and glycemic control).
+
+	- Output Volume (Max Tokens = 1024): This parameter sets a hard limit on the length of the AI's response. By setting it to 1024, the system ensures the diet plan is 	comprehensive 	enough to include breakfast, lunch, dinner, and snacks, while preventing the model from "rambling" or exceeding API usage limits. In LLM terms, 1024 tokens roughly 	equate to 750 words.
+
+	- Execution Control (Stop Sequence): The system utilizes a specific stop sequence (e.g., "DONE") to prevent the model from generating unnecessary conversational filler, ensuring 	the output remains a clean, actionable plan.
 
 5. Final Rendering
 The response is returned to the Django view and rendered in the browser using the linebreaks filter to maintain the AI's formatting (bullets and paragraphs), providing an easy-to-read plan for the user.
