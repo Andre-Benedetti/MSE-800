@@ -9,8 +9,8 @@ def log_decorator(func):
         kwargs_repr = [f"{k}={v!r}" for k, v in kwargs.items()]
         signature = ", ".join(args_repr + kwargs_repr)
         
-        print(f"--- Calling function: {func.__name__} ---")
-        print(f"Arguments: ({signature})")
+        print(f"Function name: {func.__name__}")
+        print(f"Input arguments: ({signature})")
         
         # Execute the original function
         result = func(*args, **kwargs)
