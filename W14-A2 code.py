@@ -7,7 +7,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler("function_logs.log"),
+        logging.FileHandler("W14-A2.log"),
         logging.StreamHandler()
     ]
 )
